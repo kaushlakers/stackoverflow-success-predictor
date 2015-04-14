@@ -1,5 +1,6 @@
 import xml.etree.cElementTree as etree
 from pprint import pprint as pp
+from utils import *
 '''
     function parses the xml file and returns a list of dictionaries.
     Each dict is of the following format
@@ -28,9 +29,36 @@ def parse_xml_file(filename):
     context = etree.iterparse(infile)
     parsed_rows = []
     for event,elem in context:
-        parsed_rows.append(dict(elem.attrib))
+        parsed_row = dict(elem.attrib)
+        parsed_row['body'] = Utils.strip_html_tags(parsed_row['body'])
+        parsed_rows.append(parsed_row)
         elem.clear()
+    infile.close()
     return parsed_rows
+
+def parse_xml_and_separate_labels(filename):
+    infile = open(filename, 'r')
+    context = etree.iterparse(infile)
+    parsed_rows = []
+    labels=[]
+    for event,elem in context:
+        parsed_row = dict(elem.attrib)
+        if "PostTypeId" in parsed_row.keys() and parsed_row['PostTypeId'] == '1':
+            if 'Body' in parsed_row:
+                parsed_row['Body'] = Utils.strip_html_tags(parsed_row['Body'])
+            else:
+                parsed_row['Body'] = ''
+            parsed_rows.append(parsed_row)
+            if 'AcceptedAnswerId' in parsed_row and parsed_row['AcceptedAnswerId'] is not None:
+                labels.append(1)
+            else:
+                labels.append(0)
+
+        elem.clear()
+    infile.close()
+    return (parsed_rows, labels)
+
+
 
 '''
 def main():
