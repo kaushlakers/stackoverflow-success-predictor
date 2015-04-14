@@ -59,31 +59,6 @@ def parse_xml_and_separate_labels(filename):
     infile.close()
     return (parsed_rows, labels)
 
-def quickrun(filename):
-    infile = open(filename, 'r')
-    context = etree.iterparse(infile)
-    parsed_rows = []
-    labels=[]
-    i=0
-    for event,elem in context:
-        parsed_row = dict(elem.attrib)
-        if "PostTypeId" in parsed_row.keys() and parsed_row['PostTypeId'] == '1':
-            if 'Body' in parsed_row:
-                parsed_row['Body'] = Utils.strip_html_tags(parsed_row['Body'])
-            else:
-                parsed_row['Body'] = ''
-            parsed_rows.append(parsed_row)
-            if 'AcceptedAnswerId' in parsed_row and parsed_row['AcceptedAnswerId'] is not None:
-                labels.append(1)
-            else:
-                labels.append(0)
-            i += 1
-            if i == 3000:
-                break 
-
-        elem.clear()
-    infile.close()
-    return (parsed_rows, labels)
 
 
 '''
