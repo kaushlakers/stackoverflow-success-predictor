@@ -7,7 +7,7 @@ from data_parser import *
 from utils import *
 import numpy as np
 def main():
-    baseline = Pipeline([('extract', ColumnSelector('Body')),
+    baseline = Pipeline([('extract', ColumnSelector(['Body'])),
                           ('vect', CountVectorizer(min_df=30,stop_words='english')),
                           #('tfidf', TfidfTransformer()),
                           ('clf', MultinomialNB())])

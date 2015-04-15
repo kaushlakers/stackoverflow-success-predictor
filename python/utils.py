@@ -1,6 +1,9 @@
 import re
 from random import shuffle
 import json
+from nltk import corpus
+from nltk.stem import PorterStemmer
+from nltk.tokenize import RegexpTokenizer
 #Some utility methods that I think maybe useful in the future
 class Utils:
 
